@@ -135,7 +135,7 @@ class XMLTest extends TestCase
         $element->appendChild(new \DOMText($data2));
 
         $res = XML::getDOMText($element);
-        $expected = $data1 . $data2 . $data1 . $data2;
+        $expected = $data1.$data2.$data1.$data2;
 
         $this->assertEquals($expected, $res);
     }
@@ -378,5 +378,14 @@ NOWDOC;
         $res = XML::isValid($dom, $schema);
 
         $this->assertTrue($res);
+    }
+
+    /**
+     * @covers \SimpleSAML\Utils\XML::checkSAMLMessage()
+     */
+    public function testCheckSAMLMessageInvalidType()
+    {
+        $this->setExpectedException('\InvalidArgumentException');
+        XML::checkSAMLMessage('<test></test>', 'blub');
     }
 }

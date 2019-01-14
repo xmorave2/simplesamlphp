@@ -174,8 +174,9 @@ The following SAML 2.0 options are available:
     `FALSE`.
 
 `NameIDFormat`
-:   The `NameIDFormat` this SP should receive. The three most commonly
-    used values are:
+:   The `NameIDFormat` this SP should receive. This may be specified as either a string or an array.
+
+:   The three most commonly used values are:
 
 :   1.  `urn:oasis:names:tc:SAML:2.0:nameid-format:transient`
     2.  `urn:oasis:names:tc:SAML:2.0:nameid-format:persistent`
@@ -270,6 +271,7 @@ The following SAML 2.0 options are available:
     the `attributes` array). For more advanced control over `NameID`,
     including the ability to specify any attribute regardless of
     the set sent to the SP, see the [NameID processing filters](./saml:nameid).
+    Note that the value of the attribute is collected **after** authproc-filters have run.
 
 :   Typical values can be `mail` for when using the `email` format,
     and `eduPersonTargetedID` when using the `persistent` format.
@@ -371,10 +373,11 @@ relevant for this sp. The final list is the concatenation of the list
 given as parameter to InitSSO (at the sp), the list configured at the
 sp and the list configured at the ipd (here) for this sp. The intersection
 of the final list and the idps configured at the at this idp will be
-presented to the user at the discovery service if neccessary. If only one 
+presented to the user at the discovery service if neccessary. If only one
 idp is in the intersection the discoveryservice will go directly to the idp.
 
 **Example: Configuration for scoping**
+
 
      'IDPList' => ['https://idp1.wayf.dk', 'https://idp2.wayf.dk'],
      

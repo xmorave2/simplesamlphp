@@ -471,28 +471,18 @@ class Message
         $ar = new \SAML2\AuthnRequest();
 
         // get the NameIDPolicy to apply. IdP metadata has precedence.
-        $nameIdPolicy = [];
+        $nameIdPolicy = null;
         if ($idpMetadata->hasValue('NameIDPolicy')) {
             $nameIdPolicy = $idpMetadata->getValue('NameIDPolicy');
         } elseif ($spMetadata->hasValue('NameIDPolicy')) {
             $nameIdPolicy = $spMetadata->getValue('NameIDPolicy');
         }
 
-        if (!is_array($nameIdPolicy)) {
-            // handle old configurations where 'NameIDPolicy' was used to specify just the format
-            $nameIdPolicy = ['Format' => $nameIdPolicy];
+        $policy = \SimpleSAML\Utils\Config\Metadata::parseNameIdPolicy($nameIdPolicy);
+        if ($policy !== null) {
+            // either we have a policy set, or we used the transient default
+            $ar->setNameIdPolicy($policy);
         }
-
-        $nameIdPolicy_cf = \SimpleSAML\Configuration::loadFromArray($nameIdPolicy);
-        $policy = [
-            'Format'      => $nameIdPolicy_cf->getString('Format', \SAML2\Constants::NAMEID_TRANSIENT),
-            'AllowCreate' => $nameIdPolicy_cf->getBoolean('AllowCreate', true),
-        ];
-        $spNameQualifier = $nameIdPolicy_cf->getString('SPNameQualifier', false);
-        if ($spNameQualifier !== false) {
-            $policy['SPNameQualifier'] = $spNameQualifier;
-        }
-        $ar->setNameIdPolicy($policy);
 
         $ar->setForceAuthn($spMetadata->getBoolean('ForceAuthn', false));
         $ar->setIsPassive($spMetadata->getBoolean('IsPassive', false));
@@ -506,7 +496,9 @@ class Message
 
         // Shoaib: setting the appropriate binding based on parameter in sp-metadata defaults to HTTP_POST
         $ar->setProtocolBinding($protbind);
-        $ar->setIssuer($spMetadata->getString('entityid'));
+        $issuer = new \SAML2\XML\saml\Issuer();
+        $issuer->setValue($spMetadata->getString('entityid'));
+        $ar->setIssuer($issuer);
         $ar->setAssertionConsumerServiceIndex($spMetadata->getInteger('AssertionConsumerServiceIndex', null));
         $ar->setAttributeConsumingServiceIndex($spMetadata->getInteger('AttributeConsumingServiceIndex', null));
 
@@ -656,20 +648,30 @@ class Message
         $currentURL = \SimpleSAML\Utils\HTTP::getSelfURLNoQuery();
 
         // check various properties of the assertion
+        $config = \SimpleSAML\Configuration::getInstance();
+        $allowed_clock_skew = $config->getInteger('assertion.allowed_clock_skew', 180);
+        $options = [
+            'options' => [
+                'default' => 180,
+                'min_range' => 180,
+                'max_range' => 300,
+            ],
+        ];
+        $allowed_clock_skew = filter_var($allowed_clock_skew, FILTER_VALIDATE_INT, $options);
         $notBefore = $assertion->getNotBefore();
-        if ($notBefore !== null && $notBefore > time() + 60) {
+        if ($notBefore !== null && $notBefore > time() + $allowed_clock_skew) {
             throw new \SimpleSAML\Error\Exception(
                 'Received an assertion that is valid in the future. Check clock synchronization on IdP and SP.'
             );
         }
         $notOnOrAfter = $assertion->getNotOnOrAfter();
-        if ($notOnOrAfter !== null && $notOnOrAfter <= time() - 60) {
+        if ($notOnOrAfter !== null && $notOnOrAfter <= time() - $allowed_clock_skew) {
             throw new \SimpleSAML\Error\Exception(
                 'Received an assertion that has expired. Check clock synchronization on IdP and SP.'
             );
         }
         $sessionNotOnOrAfter = $assertion->getSessionNotOnOrAfter();
-        if ($sessionNotOnOrAfter !== null && $sessionNotOnOrAfter <= time() - 60) {
+        if ($sessionNotOnOrAfter !== null && $sessionNotOnOrAfter <= time() - $allowed_clock_skew) {
             throw new \SimpleSAML\Error\Exception(
                 'Received an assertion with a session that has expired. Check clock synchronization on IdP and SP.'
             );

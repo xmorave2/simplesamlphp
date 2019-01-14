@@ -12,6 +12,7 @@ function cron_hook_frontpage(&$links)
 
     $links['config'][] = [
         'href' => SimpleSAML\Module::getModuleURL('cron/croninfo.php'),
-        'text' => '{core:frontpage:link_cron}',
+        'text' => '{cron:cron:link_cron}',
     ];
 }
+

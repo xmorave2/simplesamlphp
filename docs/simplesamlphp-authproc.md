@@ -23,7 +23,7 @@ Examples of neat things to do using Authentication Processing Filters:
   * Ask the user for consent, before the user is sent back to a service.
   * Implement basic Access Control on the IdP (not neccessarily a good idea), limiting access for some users to some SPs.
 
-Be aware that Authentication Proccessing Filters do replace some of the preivous features in SimpleSAMLphp, named:
+Be aware that Authentication Proccessing Filters do replace some of the previous features in SimpleSAMLphp, named:
 
   * `attributemap`
   * `attributealter`
@@ -111,7 +111,7 @@ Filters can be added both in `hosted` and `remote` metadata. Here is an example 
 		'certificate'		=>	'example.org.crt',
 		'auth'				=>	'feide',
 		'authproc' => [
-			40 => 'preprodwarning:Warning',
+			40 => 'core:TargetedID',
 		],
 	]
 
@@ -143,7 +143,6 @@ The following filters are included in the SimpleSAMLphp distribution:
 - [`core:TargetedID`](./core:authproc_targetedid): Generate the `eduPersonTargetedID` attribute.
 - [`core:WarnShortSSOInterval`](./core:authproc_warnshortssointerval): Give a warning if the user logs into the same SP twice within a few seconds.
 - [`expirycheck:ExpiryDate`](./expirycheck:expirycheck): Block access to accounts that have expired.
-- [`preprodwarning:Warning`](./preprodwarning:warning): Warn the user about accessing a test IdP.
 - [`saml:AttributeNameID`](./saml:nameid): Generate custom NameID with the value of an attribute.
 - [`saml:AuthnContextClassRef`](./saml:authproc_authncontextclassref): Set the authentication context in the response.
 - [`saml:ExpectedAuthnContextClassRef`](./saml:authproc_expectedauthncontextclassref): Verify the user's authentication context.
@@ -176,5 +175,7 @@ Requirements for authentication processing filters:
  - No pages may be shown to the user from the `process`-function. Instead, the request state should be saved, and the user should be redirected to a new page. This must be done to prevent unpredictable events if the user for example reloads the page.
  - No state information should be stored in the filter object. It must instead be stored in the request state array. Any changes to variables in the filter object may be lost.
  - The filter object must be serializable. It may be serialized between being constructed and the call to the `process`-function. This means that, for example, no database connections should be created in the constructor and later used in the `process`-function.
+
+*Note*: An Auth Proc Filter will not work in the "Test authentication sources" option in the web UI of a SimpleSAMLphp IdP. It will only be triggered in conjunction with an actual SP. So you need to set up an IdP *and* and SP when testing your filter.
 
 Don't hestitate to ask on the SimpleSAMLphp mailinglist if you have problems or questions, or want to share your *Auth Proc Filter* with others.

@@ -1,4 +1,5 @@
 <?php
+
 namespace SimpleSAML\Test\Utils;
 
 use PHPUnit\Framework\TestCase;
@@ -413,6 +414,18 @@ class HTTPTest extends TestCase
         $this->setExpectedException('\SimpleSAML\Error\Exception');
         HTTP::checkURLAllowed('https://app.example.com.evil.com');
 
+        $_SERVER = $original;
+    }
+
+    /**
+     * @covers SimpleSAML\Utils\HTTP::getFirstPathElement()
+     */
+    public function testGetFirstPathElement()
+    {
+        $original = $_SERVER;
+        $_SERVER['SCRIPT_NAME'] = '/test/tmp.php';
+        $this->assertEquals(HTTP::getFirstPathElement(), '/test');
+        $this->assertEquals(HTTP::getFirstPathElement(false), 'test');
         $_SERVER = $original;
     }
 }

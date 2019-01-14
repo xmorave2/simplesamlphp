@@ -11,11 +11,12 @@ function statistics_hook_frontpage(&$links)
 
     $links['config']['statistics'] = [
         'href' => SimpleSAML\Module::getModuleURL('statistics/showstats.php'),
-        'text' => '{core:frontpage:link_statistics}',
+        'text' => '{statistics:statistics:link_statistics}',
     ];
     $links['config']['statisticsmeta'] = [
         'href' => SimpleSAML\Module::getModuleURL('statistics/statmeta.php'),
-        'text' => '{core:frontpage:link_statistics_metadata}',
+        'text' => '{statistics:statistics:link_statistics_metadata}',
         'shorttext' => ['en' => 'Statistics metadata', 'no' => 'Statistikk metadata'],
     ];
 }
+

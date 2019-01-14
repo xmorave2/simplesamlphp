@@ -53,13 +53,15 @@ $allLinks = [
     'federation' => &$links_federation,
 ];
 \SimpleSAML\Module::callHooks('frontpage', $allLinks);
+\SimpleSAML\Logger::debug('The "frontpage" hook has been deprecated for the configuration page. Implement the '.
+    '"configpage" hook instead.');
 
 // Check for updates. Store the remote result in the session so we
 // don't need to fetch it on every access to this page.
 $current = $config->getVersion();
 if ($config->getBoolean('admin.checkforupdates', true) && $current !== 'master') {
     if (!function_exists('curl_init')) {
-        $warnings[] = [ '{core:frontpage:warnings_curlmissing}' ];
+        $warnings[] = '{core:frontpage:warnings_curlmissing}';
     } else {
         $latest = $session->getData("core:latest_simplesamlphp_version", "version");
 
@@ -120,8 +122,8 @@ if (\SimpleSAML\Module::isModuleEnabled('radius')) {
 $funcmatrix = [];
 $funcmatrix[] = [
     'required' => 'required',
-    'descr' => 'PHP Version >= 5.4. You run: '.phpversion(),
-    'enabled' => version_compare(phpversion(), '5.4', '>=')
+    'descr' => 'PHP Version >= 5.5. You run: '.phpversion(),
+    'enabled' => version_compare(phpversion(), '5.5', '>=')
 ];
 foreach ($functionchecks as $func => $descr) {
     $funcmatrix[] = ['descr' => $descr[1], 'required' => $descr[0], 'enabled' => function_exists($func)];
