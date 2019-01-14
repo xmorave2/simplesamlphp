@@ -3,6 +3,7 @@
 !/.gitignore
 
 # Explicitly include modules that ship with simplesamlphp
+!/authkohailsdi/
 !/adfs/
 !/authcrypt/
 !/authfacebook/
