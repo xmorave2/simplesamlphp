@@ -11,7 +11,6 @@ namespace SimpleSAML\Module\discopower;
  * @author Andreas Åkre Solberg <andreas@uninett.no>, UNINETT AS.
  * @package SimpleSAMLphp
  */
-
 class PowerIdPDisco extends \SimpleSAML\XHTML\IdPDisco
 {
     /**
@@ -69,6 +68,7 @@ class PowerIdPDisco extends \SimpleSAML\XHTML\IdPDisco
      * This is an helper function for logging messages. It will prefix the messages with our discovery service type.
      *
      * @param string $message The message which should be logged.
+     * @return void
      */
     protected function log($message)
     {
@@ -236,6 +236,7 @@ class PowerIdPDisco extends \SimpleSAML\XHTML\IdPDisco
      * Handles a request to this discovery service.
      *
      * The IdP disco parameters should be set before calling this function.
+     * @return void
      */
     public function handleRequest()
     {
@@ -247,21 +248,6 @@ class PowerIdPDisco extends \SimpleSAML\XHTML\IdPDisco
         $preferredIdP = $this->getRecommendedIdP();
 
         $t = new \SimpleSAML\XHTML\Template($this->config, 'discopower:disco.tpl.php', 'disco');
-        $discoPowerTabs = [
-            'denmark' => \SimpleSAML\Locale\Translate::noop('{discopower:tabs:denmark}'),
-            'edugain' => \SimpleSAML\Locale\Translate::noop('{discopower:tabs:edugain}'),
-            'finland' => \SimpleSAML\Locale\Translate::noop('{discopower:tabs:finland}'),
-            'greece' => \SimpleSAML\Locale\Translate::noop('{discopower:tabs:greece}'),
-            'southafrica' => \SimpleSAML\Locale\Translate::noop('{discopower:tabs:southafrica}'),
-            'iceland' => \SimpleSAML\Locale\Translate::noop('{discopower:tabs:iceland}'),
-            'incommon' => \SimpleSAML\Locale\Translate::noop('{discopower:tabs:incommon}'),
-            'kalmar' => \SimpleSAML\Locale\Translate::noop('{discopower:tabs:kalmar}'),
-            'misc' => \SimpleSAML\Locale\Translate::noop('{discopower:tabs:misc}'),
-            'norway' => \SimpleSAML\Locale\Translate::noop('{discopower:tabs:norway}'),
-            'sweden' => \SimpleSAML\Locale\Translate::noop('{discopower:tabs:sweden}'),
-            'switzerland' => \SimpleSAML\Locale\Translate::noop('{discopower:tabs:switzerland}'),
-            'ukacessfederation' => \SimpleSAML\Locale\Translate::noop('{discopower:tabs:ukacessfederation}'),
-        ];
 
         $t->data['return'] = $this->returnURL;
         $t->data['returnIDParam'] = $this->returnIdParam;
@@ -282,27 +268,34 @@ class PowerIdPDisco extends \SimpleSAML\XHTML\IdPDisco
             $t->data['autofocus'] = 'favouritesubmit';
         }
 
-        $search = '<script type="text/javascript">
-            $(document).ready(function() {
-                $("#tabdiv").tabs({ selected: '.$t->data['defaulttab'].' });';
-        $i = 0;
-        foreach ($idpList as $tab => $slist) {
-            $search .= "\n".'$("#query_'.$tab.'").liveUpdate("#list_'.$tab.'")'.
-            (($i++ == 0) && (empty($this->data['faventry'])) ? '.focus()' : '').';';
-        }
-        $search .= "});\n</script>";
+        /* store the tab list in the session */
+        $session = \SimpleSAML\Session::getSessionFromRequest();
+        $session->setData('discopower:tabList', 'faventry', $this->data['faventry']);
+        $session->setData('discopower:tabList', 'tabs', array_keys($idpList));
+        $session->setData('discopower:tabList', 'defaulttab', $t->data['defaulttab']);
 
-        $t->data['search'] = $search;
         $t->data['score'] = $this->discoconfig->getValue('score', 'quicksilver');
-        $t->data['tabNames'] = $discoPowerTabs;
         $t->data['preferredidp'] = $preferredIdP;
         $t->data['urlpattern'] = htmlspecialchars(\SimpleSAML\Utils\HTTP::getSelfURLNoQuery());
         $t->data['rememberenabled'] = $this->config->getBoolean('idpdisco.enableremember', false);
         $t->data['rememberchecked'] = $this->config->getBoolean('idpdisco.rememberchecked', false);
         $t->data['jquery'] = ['core' => true, 'ui' => true];
+        foreach(array_keys($idpList) as $tab) {
+            if ($t->getTag('{discopower:tabs:' . $tab . '}') === null) {
+                $t->includeInlineTranslation('{discopower:tabs:'. $tab. '}', $tab);
+            }
+            $t->data['tabNames'][$tab] = \SimpleSAML\Locale\Translate::noop('{discopower:tabs:' . $tab . '}');
+        }
         $t->show();
     }
 
+
+    /**
+     * @param \SimpleSAML\XHTML\Template $t
+     * @param array $metadata
+     * @param string $favourite
+     * @return array
+     */
     private function processMetadata($t, $metadata, $favourite)
     {
         $basequerystring = '?'.
@@ -394,6 +387,7 @@ class PowerIdPDisco extends \SimpleSAML\XHTML\IdPDisco
      * This function overrides the corresponding function in the parent class, to add support for common domain cookie.
      *
      * @param string $idp The entityID of the IdP.
+     * @return void
      */
     protected function setPreviousIdP($idp)
     {

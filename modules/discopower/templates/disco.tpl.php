@@ -4,12 +4,14 @@ $this->data['header'] = $this->t('selectidp');
 $this->data['jquery'] = ['core' => true, 'ui' => true, 'css' => true];
 
 $this->data['head'] = '<link rel="stylesheet" media="screen" type="text/css" href="'.
-    SimpleSAML\Module::getModuleURL('discopower/assets/css/style.css').'" />';
+    SimpleSAML\Module::getModuleURL('discopower/assets/css/disco.css').'" />';
 
-$this->data['post'] = '<script type="text/javascript" src="'.
-    SimpleSAML\Module::getModuleURL('discopower/assets/js/jquery.livesearch.js').'"></script>';
-$this->data['post'] .= '<script type="text/javascript" src="'.
-    SimpleSAML\Module::getModuleURL('discopower/assets/js/quicksilver.js').'"></script>';
+$this->data['head'] .= '<script type="text/javascript" src="'.
+    SimpleSAML\Module::getModuleURL('discopower/assets/js/jquery.livesearch.js').'"></script>'."\n";
+$this->data['head'] .= '<script type="text/javascript" src="'.
+    SimpleSAML\Module::getModuleURL('discopower/assets/js/'.$this->data['score'].'.js').'"></script>'."\n";
+$this->data['head'] .= '<script type="text/javascript" src="'.
+    SimpleSAML\Module::getModuleURL('discopower/assets/js/tablist.js').'"></script>'."\n";
 
 if (!empty($this->data['faventry'])) {
     $this->data['autofocus'] = 'favouritesubmit';
@@ -129,20 +131,5 @@ foreach ($this->data['idplist'] as $tab => $slist) {
 
 </div>
 
-<script type="text/javascript">
-$(document).ready(function () {
 <?php
-$i = 0;
-foreach ($this->data['idplist'] as $tab => $slist) {
-    echo "\n".'$("#query_'.$tab.'").liveUpdate("#list_'.$tab.'")'.
-        (($i++ == 0) && (empty($this->data['faventry'])) ? '.focus()' : '').';';
-}
-?>
-});
-
-</script>
-
-<?php
-$this->data['post'] .= '<script type="text/javascript" src="'.
-    SimpleSAML\Module::getModuleURL('discopower/js/javascript.js').'"></script>';
 $this->includeAtTemplateBase('includes/footer.php');

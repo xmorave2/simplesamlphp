@@ -3,6 +3,7 @@
 $config = \SimpleSAML\Configuration::getInstance();
 $statconfig = \SimpleSAML\Configuration::getConfig('module_statistics.php');
 $session = \SimpleSAML\Session::getSessionFromRequest();
+$t = new \SimpleSAML\XHTML\Template($config, 'statistics:statistics.tpl.php');
 
 \SimpleSAML\Module\statistics\AccessCheck::checkAccess($statconfig);
 
@@ -43,7 +44,6 @@ $ruleset = new \SimpleSAML\Module\statistics\Ruleset($statconfig);
 $statrule = $ruleset->getRule($preferRule);
 $rule = $statrule->getRuleID();
 
-$t = new \SimpleSAML\XHTML\Template($config, 'statistics:statistics.tpl.php');
 $t->data['pageid'] = 'statistics';
 $t->data['header'] = 'stat';
 $t->data['available_rules'] = $ruleset->availableRulesNames();
@@ -151,6 +151,14 @@ $t->data['jquery'] = ['core' => false, 'ui' => true, 'css' => true];
 
 $t->show();
 
+
+/**
+ * @param \SimpleSAML\XHTML\Template $t
+ * @param string $type
+ * @param string|null $key
+ * @param string|null $value
+ * @return string|array
+ */
 function getBaseURL($t, $type = 'get', $key = null, $value = null)
 {
     $vars = [

@@ -24,7 +24,8 @@ namespace SimpleSAML\Auth;
  * By defining an exception handler when creating the state array, users of the state
  * array can call throwException with the state and the exception. This exception will
  * be passed to the handler defined by the EXCEPTION_HANDLER_URL or EXCEPTION_HANDLER_FUNC
- * elements of the state array.
+ * elements of the state array. Note that internally this uses the request parameter name
+ * defined in EXCEPTION_PARAM, which, for technical reasons, cannot contain a ".".
  *
  * @author Olav Morken, UNINETT AS.
  * @package SimpleSAMLphp
@@ -83,8 +84,10 @@ class State
 
     /**
      * The URL parameter which contains the exception state id.
+     * Note that this does not contain a "." since it's used in the
+     * _REQUEST superglobal that does not allow dots.
      */
-    const EXCEPTION_PARAM = '\SimpleSAML\Auth\State.exceptionId';
+    const EXCEPTION_PARAM = '\SimpleSAML\Auth\State_exceptionId';
 
 
     /**
@@ -254,7 +257,7 @@ class State
      * @throws \SimpleSAML\Error\NoState If we couldn't find the state and there's no URL defined to redirect to.
      * @throws \Exception If the stage of the state is invalid and there's no URL defined to redirect to.
      *
-     * @return array|NULL  State information, or null if the state is missing and $allowMissing is true.
+     * @return array|null  State information, or NULL if the state is missing and $allowMissing is true.
      */
     public static function loadState($id, $stage, $allowMissing = false)
     {
@@ -315,6 +318,7 @@ class State
      * This function deletes the given state to prevent the user from reusing it later.
      *
      * @param array &$state The state which should be deleted.
+     * @return void
      */
     public static function deleteState(&$state)
     {
@@ -339,6 +343,7 @@ class State
      * @param \SimpleSAML\Error\Exception $exception The exception.
      *
      * @throws \SimpleSAML\Error\Exception If there is no exception handler defined, it will just throw the $exception.
+     * @return void
      */
     public static function throwException($state, \SimpleSAML\Error\Exception $exception)
     {
@@ -373,9 +378,9 @@ class State
     /**
      * Retrieve an exception state.
      *
-     * @param string|NULL $id The exception id. Can be NULL, in which case it will be retrieved from the request.
+     * @param string|null $id The exception id. Can be NULL, in which case it will be retrieved from the request.
      *
-     * @return array|NULL  The state array with the exception, or NULL if no exception was thrown.
+     * @return array|null  The state array with the exception, or NULL if no exception was thrown.
      */
     public static function loadExceptionState($id = null)
     {

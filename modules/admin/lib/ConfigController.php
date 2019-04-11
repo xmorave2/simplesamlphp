@@ -148,11 +148,11 @@ class ConfigController
                 'descr' => [
                     Translate::noop('PHP %minimum% or newer is needed. You are running: %current%'),
                     [
-                        '%minimum%' => '5.5',
+                        '%minimum%' => '5.6',
                         '%current%' => explode('-', phpversion())[0]
                     ]
                 ],
-                'enabled' => version_compare(phpversion(), '5.5', '>=')
+                'enabled' => version_compare(phpversion(), '5.6', '>=')
             ]
         ];
         $store = $this->config->getString('store.type', '');
@@ -268,7 +268,7 @@ class ConfigController
                 'classes' => ['\Predis\Predis'],
                 'required' => $store === 'redis' ? 'required' : 'optional',
                 'descr' => [
-                    'optional' => Translate::noop('predis/predis (required if the redis data store is used'),
+                    'optional' => Translate::noop('predis/predis (required if the redis data store is used)'),
                     'required' => Translate::noop('predis/predis library'),
                 ]
             ],
@@ -277,7 +277,7 @@ class ConfigController
                 'required' => $store === 'memcache' ? 'required' : 'optional',
                 'descr' => [
                     'optional' => Translate::noop(
-                        'Memcache or Memcached extension (required if the memcache backend is used'
+                        'Memcache or Memcached extension (required if the memcache backend is used)'
                     ),
                     'required' => Translate::noop('Memcache or Memcached extension'),
                 ]

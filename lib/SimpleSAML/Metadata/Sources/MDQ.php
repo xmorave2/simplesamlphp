@@ -2,6 +2,7 @@
 
 namespace SimpleSAML\Metadata\Sources;
 
+use RobRichards\XMLSecLibs\XMLSecurityDSig;
 use SimpleSAML\Logger;
 use SimpleSAML\Utils\HTTP;
 
@@ -77,6 +78,11 @@ class MDQ extends \SimpleSAML\Metadata\MetaDataStorageSource
             $this->validateFingerprint = $config['validateFingerprint'];
         } else {
             $this->validateFingerprint = null;
+        }
+        if (isset($config['validateFingerprintAlgorithm'])) {
+            $this->validateFingerprintAlgorithm = $config['validateFingerprintAlgorithm'];
+        } else {
+            $this->validateFingerprintAlgorithm = XMLSecurityDSig::SHA1;
         }
 
         if (array_key_exists('cachedir', $config)) {
@@ -193,6 +199,7 @@ class MDQ extends \SimpleSAML\Metadata\MetaDataStorageSource
      * @param array  $data The associative array with the metadata for this entity.
      *
      * @throws \Exception If metadata cannot be written to cache.
+     * @return void
      */
     private function writeToCache($set, $entityId, $data)
     {
@@ -260,7 +267,7 @@ class MDQ extends \SimpleSAML\Metadata\MetaDataStorageSource
      * @param string $index The entityId or metaindex we are looking up.
      * @param string $set The set we are looking for metadata in.
      *
-     * @return array An associative array with metadata for the given entity, or NULL if we are unable to
+     * @return array|null An associative array with metadata for the given entity, or NULL if we are unable to
      *         locate the entity.
      * @throws \Exception If an error occurs while validating the signature or the metadata is in an
      *         incorrect set.
@@ -315,7 +322,10 @@ class MDQ extends \SimpleSAML\Metadata\MetaDataStorageSource
         Logger::debug(__CLASS__.': completed parsing of ['.$mdq_url.']');
 
         if ($this->validateFingerprint !== null) {
-            if (!$entity->validateFingerprint($this->validateFingerprint)) {
+            if (!$entity->validateFingerprint(
+                $this->validateFingerprint,
+                $this->validateFingerprintAlgorithm
+            )) {
                 throw new \Exception(__CLASS__.': error, could not verify signature for entity: '.$index.'".');
             }
         }
