@@ -1,0 +1,50 @@
+{
+	"login_help": {
+		"en": "How to login"
+	},
+	"registration": {
+		"en": "Registration"
+        },
+	"login_comment": {
+		"en": "Once logged in you can browse online catalogue, databases and submit comments on our web"
+	},
+	"forgotten_login": {
+		"en": "Card number recovery"
+	},
+	"password_recovery": {
+		"en": "Password recovery"
+	},
+	"institution_login": {
+		"en": "Institution login"
+	},
+	"remember_me": {
+		"en": "Remember me"
+	},
+	"help": {
+		"en": "help"
+	},
+	"maintenance_in_progress" : {
+		"en": "You can't login at this time. Maintenance in progress."
+	},
+	"mojeid_missing_header" : {
+		"en": "Your library account is not connected with MojeID"
+	},
+	"mojeid_missing_link_text" : {
+                "en": "Connect your library account with MojeID here"
+	},
+	"may_close_window" : {
+                "en": "You may now close this window."
+	},
+	"walkin" : {
+                "en": "Login as a guest"
+        },
+	"walkin_outside_library" : {
+		"en": "Cannot use guest account outside the library"
+        },
+	"walkin_outside_please_return" : {
+		"en": "Please return to the library network or log in using your library account."
+        },
+	"walkin_logged_out" : {
+		"en": "You have been logged out of the guest account because you are no longer inside the library network."
+	}
+}

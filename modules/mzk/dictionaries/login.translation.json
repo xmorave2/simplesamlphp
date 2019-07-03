@@ -1,0 +1,50 @@
+{
+	"login_help": {
+		"cs": "Jak se přihlásit"
+	},
+	"registration": {
+		"cs": "Registrovat"
+	},
+	"login_comment": {
+		"cs": "Po přihlášení budete moci používat online katalog, informační databáze a přidávat komentáře na webu."
+	},
+	"forgotten_login": {
+		"cs": "Neznám číslo/přezdívku"
+	},
+	"password_recovery": {
+		"cs": "Neznám heslo"
+	},
+	"institution_login": {
+		"cs": "Jednotné přihlášení"
+	},
+	"remember_me": {
+		"cs": "Zapamatuj si mě"
+	},
+	"help": {
+		"cs": "nápověda"
+	},
+	"maintenance_in_progress" : {
+		"cs": "Právě probíhá údržba, nemůžete se přihlásit."
+	},
+	"mojeid_missing_header" : {
+		"cs": "Nemáte propojený knihovní účet s MojeID"
+	},
+	"mojeid_missing_link_text" : {
+		"cs": "Propojte si zde svůj knihovní účet s MojeID"
+	},
+	"walkin" : {
+		"cs": "Přihlásit jako host"
+	},
+	"may_close_window" : {
+                "cs": "Nyní můžete zavřít toto okno."
+        },
+	"walkin_outside_library" : {
+		"cs": "Účet hosta lze použít jen v knihovně"
+        },
+	"walkin_outside_please_return" : {
+		"cs": "Prosím, vraťte se zpět do internetové sítě knihovny nebo se přihlašte pod svým účtem."
+        },
+	"walkin_logged_out" : {
+		"cs": "Byli jste odhlášeni z účtu hosta, neboť se právě nenacházíte v internetové síti knihovny."
+	}
+}
