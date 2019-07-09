@@ -55,7 +55,7 @@ class LDAPTry extends \SimpleSAML\Module\core\Auth\UserPassBase {
                 $result = $ldap->login($username, $password, $sasl_args);
                 $result['ldap.source'] = $source;
                 return $result;
-            } catch (Exception $ex) {
+            } catch (\Exception $ex) {
             }
         }
         throw new \SimpleSAML\Error\Error('WRONGUSERPASS');
