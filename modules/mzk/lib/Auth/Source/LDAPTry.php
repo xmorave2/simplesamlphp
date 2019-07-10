@@ -4,7 +4,7 @@ namespace SimpleSAML\Module\mzk\Auth\Source;
 
 class LDAPTry extends \SimpleSAML\Module\core\Auth\UserPassBase {
 
-    private $servers;
+    private $servers = [];
 
     /**
      * Constructor for this authentication source.
@@ -23,7 +23,6 @@ class LDAPTry extends \SimpleSAML\Module\core\Auth\UserPassBase {
         }
         $authsource = \SimpleSAML\Configuration::getConfig('authsources.php');
 
-        $this->servers = [];
         foreach ($config['sources'] as $source) {
             if (!$authsource->hasValue($source)) {
                 throw new \SimpleSAML\Error\Exception(
@@ -32,10 +31,14 @@ class LDAPTry extends \SimpleSAML\Module\core\Auth\UserPassBase {
                 );
             }
             $authSourceConfig = $authsource->getConfigItem($source)->toArray();
-            $this->servers[$source] = new \SimpleSAML\Module\ldap\ConfigHelper(
+            $ldap = new \SimpleSAML\Module\ldap\ConfigHelper(
                 $authSourceConfig,
                 'Authentication source ' . var_export($this->authId, true)
             );
+            $this->servers[$source] = [
+                'id'   => $authSourceConfig['id'],
+                'ldap' => $ldap
+            ];
         }
     }
 
@@ -50,10 +53,11 @@ class LDAPTry extends \SimpleSAML\Module\core\Auth\UserPassBase {
     protected function login($username, $password, array $sasl_args = NULL) {
         assert('is_string($username)');
         assert('is_string($password)');
-        foreach($this->servers as $source => $ldap) {
+        foreach($this->servers as $source => $server) {
             try {
-                $result = $ldap->login($username, $password, $sasl_args);
-                $result['ldap.source'] = $source;
+                $result = $server['ldap']->login($username, $password, $sasl_args);
+                $result['id'] = $result[$server['id']];
+                $result['ldap.source'] = [ $source ];
                 return $result;
             } catch (\Exception $ex) {
             }
