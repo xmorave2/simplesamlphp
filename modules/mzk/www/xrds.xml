@@ -1,0 +1,12 @@
+<xrds:XRDS xmlns:xrds="xri://$xrds" xmlns="xri://$xrd*($v*2.0)">
+	<XRD>
+		<Service>
+			<Type>http://specs.openid.net/auth/2.0/return_to</Type>
+			<URI>https://shibboleth.mzk.cz/simplesaml/module.php/openid/linkback.php</URI>
+		</Service>
+		<Service>
+			<Type>http://specs.nic.cz/registration/assert_url</Type>
+			<URI>https://www.mzk.cz/predregistrace</URI>
+		</Service>
+	</XRD>
+</xrds:XRDS>
