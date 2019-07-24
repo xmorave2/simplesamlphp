@@ -53,13 +53,16 @@ class LDAPTry extends \SimpleSAML\Module\core\Auth\UserPassBase {
     protected function login($username, $password, array $sasl_args = NULL) {
         assert('is_string($username)');
         assert('is_string($password)');
-        foreach($this->servers as $source => $server) {
-            try {
-                $result = $server['ldap']->login($username, $password, $sasl_args);
-                $result['id'] = $result[$server['id']];
-                $result['ldap.source'] = [ $source ];
-                return $result;
-            } catch (\Exception $ex) {
+        $passwords = [ $password, strtolower($password) ];
+        foreach($passwords as $pwd) {
+            foreach($this->servers as $source => $server) {
+                try {
+                    $result = $server['ldap']->login($username, $pwd, $sasl_args);
+                    $result['id'] = $result[$server['id']];
+                    $result['ldap.source'] = [ $source ];
+                    return $result;
+                } catch (\Exception $ex) {
+                }
             }
         }
         throw new \SimpleSAML\Error\Error('WRONGUSERPASS');
