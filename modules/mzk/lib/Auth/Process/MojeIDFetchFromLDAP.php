@@ -23,7 +23,7 @@ class MojeIDFetchFromLDAP extends \SimpleSAML\Module\ldap\Auth\Process\Attribute
         $attributes = &$request['Attributes'];
         if (isset($attributes['openid.local_id'])) {
             parent::process($request);
-            if (!isset($attributes['uidNumber'])) {
+            if (!isset($attributes['id'])) {
                 $id  = \SimpleSAML\Auth\State::saveState($request, 'mzk:mojeid_missing');
                 $url = \SimpleSAML\Module::getModuleURL('mzk/mojeid_missing.php');
                 \SimpleSAML\Utils\HTTP::redirectTrustedURL($url, array('StateId' => $id));
