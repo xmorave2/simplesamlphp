@@ -33,8 +33,8 @@ class EduPersonTargetedIDLogger extends \SimpleSAML\Auth\ProcessingFilter {
         assert('array_key_exists("Attributes", $request)');
         $attributes = & $request['Attributes'];
         $metadata = & $request['SPMetadata'];
-        $eduPersonPrincipalName = $attributes['urn:mace:dir:attribute-def:eduPersonPrincipalName'][0];
-        $eduPersonTargetedID = $attributes['urn:mace:dir:attribute-def:eduPersonTargetedID'][0];
+        $eduPersonPrincipalName = $attributes['eduPersonPrincipalName'][0];
+        $eduPersonTargetedID = $attributes['eduPersonTargetedID'][0]->getValue();
         $consumerService = $metadata['entityid'];
         \SimpleSAML\Logger::info("$eduPersonPrincipalName ($eduPersonTargetedID) accesses $consumerService");
     }
