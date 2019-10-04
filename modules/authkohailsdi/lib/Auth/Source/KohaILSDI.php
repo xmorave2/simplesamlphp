@@ -22,6 +22,10 @@ class KohaILSDI extends \SimpleSAML\Module\core\Auth\UserPassBase
 
     protected $domain;
 
+    protected $agencyId;
+
+    protected $organizationName;
+
     /**
      * Constructor for this authentication source.
      *
@@ -40,6 +44,8 @@ class KohaILSDI extends \SimpleSAML\Module\core\Auth\UserPassBase
         $this->affiliationMapping = $config['affiliation_mapping'];
         $this->defaultAffiliation = $config['default_affiliation'];
         $this->domain = $config['domain'];
+        $this->agencyId = $config['agencyId'];
+        $this->organizationName = $config['organizationName'];
     }
 
     /**
@@ -63,8 +69,9 @@ class KohaILSDI extends \SimpleSAML\Module\core\Auth\UserPassBase
             if ( is_array($this->affiliationMapping[(string)$rsp->{'categorycode'}])) {
                 $eduPersonScopedAffiliation = $this->affiliationMapping[(string)$rsp->{'categorycode'}];
             }
+            $commonname = $rsp->{'firstname'} . " " . $rsp->{'surname'};
             $profile = [
-                'cn' => [ $rsp->{'firstname'} . " " . $rsp->{'surname'} ],
+                'cn' => [ $commonname ],
                 'eduPersonPrincipalName' => [ $this->addScope($rsp->{'cardnumber'}) ],
                 'eduPersonScopedAffiliation' => $this->addScope($eduPersonScopedAffiliation),
                 'eduPersonUniqueId' => [$this->addScope($idObj->{'id'})],
@@ -75,6 +82,12 @@ class KohaILSDI extends \SimpleSAML\Module\core\Auth\UserPassBase
                 'uid' => [(string)$idObj->{'id'}],
                 'displayName' => [$rsp->{'firstname'} . " " . $rsp->{'surname'}],
                 'eduPersonAffiliation' => [(string)$rsp->{'categorycode'}],
+                'userLibraryId' => [(string)$idObj->{'id'}],
+                'userHomeLibrary' =>  [$this->agencyId],
+                'o' => [$this->organizationName],
+                'eduPersonEntitlement' => ['urn:mace:dir:entitlement:common-lib-terms'],
+                'telephoneNumber' => [(string)$rsp->{'phone'}],
+                'commonNameASCII' => [iconv("UTF-8", "ASCII//TRANSLIT", $commonname)],
             ];
             \SimpleSAML\Logger::debug(var_export($profile, true));
             return $profile;
