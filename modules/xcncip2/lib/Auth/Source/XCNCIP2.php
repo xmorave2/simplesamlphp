@@ -187,7 +187,7 @@ class XCNCIP2 extends \SimpleSAML\Module\core\Auth\UserPassBase {
 			$result->registerXPathNamespace('ns1', 'http://www.niso.org/2008/ncip');
 			return $result;
 		} else {
-			throw new RuntimeException("Problem parsing XML");
+			throw new \SimpleSAML\Error\Exception("Problem parsing XML");
 		}
 	}
 
