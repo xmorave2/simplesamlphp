@@ -1,0 +1,99 @@
+body {
+	font-family: 'Lucida Grande', arial, sans-serif;
+	background: #F5F5F5;
+	font-size: 15px;
+	margin: 0;
+}
+
+h1 { color: #000; }
+p { line-height: 20px; margin: 0 0 10px 0; }
+hr { color: #e0e0e0; height: 1px; display: block; border: none; border-top: 1px solid #e0e0e0; }
+a:hover { text-decoration: none !important; }
+img { border: 0px; }
+
+.container { margin: 0 auto; width: 505px; }
+.loginform-wrapper { padding: 20px 0; border-top: 1px solid #E0E0E0; border-bottom: 1px solid #E0E0E0; }
+.login-header { height: 30px; position: relative; }
+.login-footer { padding: 20px 0 0 0; }
+.lng-switch { position: absolute; bottom: 10px; right: 20px; margin: 0; }
+
+.error {
+	background: #FFEFF7;
+	border: 1px solid #c69;
+	margin: 1em 5% 10px;
+	padding: 0 1em 0 1em;
+}
+
+#login input.input {
+	font-family: arial, sans-serif;
+	width: 200px;
+	font-size: 15px;
+	font-weight: bold;
+	padding: 10px;
+	border: 1px solid #e0e0e0;
+	margin-top: 6px;
+}
+#languagebar a { color: #aaa; }
+#languagebar { color: #eee; font-size: 80%; margin: 0em auto 1em; padding: 0px 40px; color: #000; width: 425px; }
+div#error { border: 1px solid #999999; background: #fff; margin: 10px auto 1em; padding: 8px 20px; color: #000; }
+
+#login { background: #fff; border: 1px solid #e0e0e0; margin: 0; padding: 30px 40px; width: 425px; }
+#login ul.links a { text-decoration: none; color: #666; }
+#login ul.links a:hover { color: #111; }
+#login ul.links { font-family: 'Lucida Grande', arial, sans-serif; padding: 0px; font-size: 85%; list-style-type:square; list-style-position: inside; }
+#login ul.links li { margin-top: .3em; }
+
+#rememberme { margin: 0 8px 0 0; position: relative; top: 1px; }
+
+.login-btn { margin: 0 0 15px 0; }
+.btn, .btn-large { font-family: Arial, sans-serif; background: #428bca; color: #FFF; border: 0px; font-size: 15px; font-weight: bold; padding: 8px 10px; margin: 0 10px 0 0; display: block; float: left; text-decoration: none !important; cursor: pointer; }
+.btn-large { width: 220px; }
+.btn:hover { background: #12a6af; }
+input.btn { height: 32px; }
+.service-btn a.btn { background: #e64664; }
+.service-btn a:hover.btn { background: #bc2a45; }
+
+#login p.dulezite {
+	font-family: 'Lucida Grande', arial, sans-serif;
+	color: #e64664;
+	padding: 10px;
+	font-size: 150%;
+	list-style-type:square;
+	list-style-position: inside;
+	background: white;
+	font-weight: bold;
+}
+
+.clearfix:after,
+.login-btn:after,
+.service-btn:after {
+	content:".";
+	display: block;
+	clear: both;
+	height: 0;
+	font-size: 0;
+	line-height: 0;
+	visibility: hidden;
+	overflow: hidden;
+}
+
+a.register {
+	color: white;
+	font-weight: bold;
+	font-family: arial, sans-serif;
+	font-size: 15px;
+	text-decoration: none;
+}
+
+a.register:link {
+	text-decoration: none;
+}
+
+a.register:active {
+	text-decoration: none;
+}
+
+a.register:visited {
+	text-decoration: none;
+}
+
