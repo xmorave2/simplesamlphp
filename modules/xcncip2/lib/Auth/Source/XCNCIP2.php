@@ -1,7 +1,7 @@
 <?php
 namespace SimpleSAML\Module\xcncip2\Auth\Source;
 
-class XCNCIP2 extends \SimpleSAML\Auth\Source {
+class XCNCIP2 extends \SimpleSAML\Module\core\Auth\UserPassBase {
 
 	protected $url;
 
