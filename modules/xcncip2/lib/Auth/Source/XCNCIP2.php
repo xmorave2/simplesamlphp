@@ -109,8 +109,6 @@ class XCNCIP2 extends \SimpleSAML\Module\core\Auth\UserPassBase {
 				$lastname = implode(' ', $names);
 			}
 		}
-		$privilegeType = trim((String) $response->xpath(
-				'ns1:LookupUserResponse/ns1:UserOptionalFields/ns1:UserPrivilege/ns1:AgencyUserPrivilegeType')[0]);
 		$fullname = trim($firstname . ' ' . $lastname);
 		if (! $this->excludeAcademicDegrees) {
 			$academicDegreesWordy = array_reduce($academicDegrees, function($a, $b) { return $a . ' ' . $b; });
@@ -131,24 +129,6 @@ class XCNCIP2 extends \SimpleSAML\Module\core\Auth\UserPassBase {
 		);
 		if ($mail !== null) {
 			$providedAttributes['mail'] = array( $mail );
-		}
-		$isEmployee = false;
-		// Note that this is only applyable for Koha
-		if ($privilegeType === 'KN' || $privilegeType === 'S') {
-			$providedAttributes['eduPersonScopedAffiliation'][] = 'employee@' . $this->eppnScope;
-			$providedAttributes['eduPersonScopedAffiliation'][] = 'staff@' . $this->eppnScope;
-			$isEmployee = true;
-		}
-		if ($isEmployee) {
-			if ($tel !== null) {
-				$providedAttributes['telephoneNumber'] = array( $tel );
-			}
-			if ($mail !== null) {
-				$providedAttributes['authMail'] = array( $mail );
-			}
-			$providedAttributes['unstructuredName'] = array( $userId );
-			$providedAttributes['eduPersonEntitlement'] = array( 'urn:mace:terena.org:tcs:escience-user' );
-			$providedAttributes['commonNameASCII'] = array( $this->remove_accents($providedAttributes['cn'][0]) );
 		}
 		return $providedAttributes;
 	}
